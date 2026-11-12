@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Préconisation Foliaire — OligoPlus</title>
+<style>
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body { margin: 0; padding: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; color: #0D3820; background: #FFFEF4; }
+  body { font-size: 10.5pt; line-height: 1.45; }
+  .page { width: 210mm; min-height: 297mm; padding: 14mm 16mm; background: #FFFEF4; margin: 0 auto; }
+
+  .topbar { display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 1.5px solid #0D3820; margin-bottom: 18px; }
+  .topbar-eyebrow { font-size: 8pt; letter-spacing: 1.8px; text-transform: uppercase; font-weight: 600; opacity: 0.8; }
+  .topbar-eyebrow strong { font-weight: 800; }
+  .topbar-ref { font-size: 8pt; letter-spacing: 0.4px; opacity: 0.6; font-weight: 500; }
+
+  .brand-row { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+  .brand-logo-img { height: 36px; width: auto; display: block; filter: brightness(0) saturate(100%) invert(14%) sepia(40%) saturate(900%) hue-rotate(96deg) brightness(93%) contrast(95%); }
+
+  .meta-row { display: flex; gap: 10px; margin-bottom: 18px; }
+  .meta-card { flex: 1; padding: 14px 18px; background: transparent; border: 1.5px dashed #0D382040; border-radius: 10px; }
+  .meta-card .label { font-size: 8pt; letter-spacing: 1.4px; text-transform: uppercase; font-weight: 700; opacity: 0.55; margin-bottom: 4px; }
+  .meta-card .value { font-size: 15pt; font-weight: 800; color: #0D3820; }
+
+  .culture-section { margin-bottom: 18px; page-break-inside: avoid; }
+  .culture-eyebrow { font-size: 8pt; letter-spacing: 1.6px; text-transform: uppercase; font-weight: 700; opacity: 0.7; margin-bottom: 2px; }
+  .culture-eyebrow .dot { display: inline-block; width: 7px; height: 7px; background: #C5DCF0; border-radius: 2px; margin-right: 8px; vertical-align: middle; }
+  .culture-title { font-size: 18pt; font-weight: 800; color: #0D3820; margin: 2px 0 10px 0; letter-spacing: -0.3px; }
+
+  .frise { background: #DCE9F5; border-radius: 14px; padding: 16px 18px 18px 18px; }
+  .frise-eyebrow { font-size: 8pt; letter-spacing: 1.6px; text-transform: uppercase; font-weight: 700; opacity: 0.75; margin-bottom: 10px; }
+  .frise-eyebrow .dot { display: inline-block; width: 7px; height: 7px; background: #0D3820; border-radius: 2px; margin-right: 8px; vertical-align: middle; }
+  .timeline { position: relative; display: flex; justify-content: space-around; align-items: flex-start; padding-top: 6px; gap: 12px; }
+  .timeline::before { content: ''; position: absolute; top: 26px; left: 10%; right: 10%; height: 2px; background: #0D382025; z-index: 0; }
+  .stage { position: relative; z-index: 1; flex: 1; display: flex; flex-direction: column; align-items: center; text-align: center; padding: 0 4px; }
+  .stage-picto { width: 52px; height: 52px; background: #FFFEF4; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 7px; box-shadow: 0 2px 4px rgba(13,56,32,0.08); position: relative; }
+  .stage-picto svg { width: 26px; height: 26px; }
+  .stage-rep-badge { position: absolute; top: -4px; right: -4px; background: #0D3820; color: #FFFEF4; font-size: 7pt; font-weight: 800; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; letter-spacing: -0.2px; }
+  .stage-name { font-size: 7.5pt; letter-spacing: 1.1px; text-transform: uppercase; font-weight: 700; color: #0D3820; margin-bottom: 8px; line-height: 1.35; min-height: 28px; padding: 0 4px; }
+  .stage-pill { background: #0D3820; color: #FFFEF4; padding: 6px 12px; border-radius: 999px; font-size: 8.5pt; font-weight: 600; white-space: nowrap; margin-bottom: 4px; display: inline-block; }
+  .stage-pill + .stage-pill { margin-top: 2px; }
+  .stage-compo { font-size: 6.5pt; color: #0D3820; opacity: 0.72; line-height: 1.4; padding: 4px 2px 0 2px; }
+
+  /* COMPACT MODE for 2-3 cultures */
+  .page.compact .culture-title { font-size: 16pt; margin: 1px 0 8px 0; }
+  .page.compact .frise { padding: 12px 14px 14px 14px; }
+  .page.compact .stage-picto { width: 44px; height: 44px; margin-bottom: 6px; }
+  .page.compact .stage-picto svg { width: 22px; height: 22px; }
+  .page.compact .stage-rep-badge { width: 18px; height: 18px; font-size: 6.5pt; }
+  .page.compact .stage-name { font-size: 6.5pt; letter-spacing: 0.9px; min-height: 20px; margin-bottom: 6px; }
+  .page.compact .stage-pill { padding: 4px 10px; font-size: 7.5pt; margin-bottom: 3px; }
+  .page.compact .stage-compo { font-size: 6pt; }
+
+  .notes { margin-top: 16px; padding: 12px 16px; background: transparent; border: 1px dashed #0D382040; border-radius: 10px; font-size: 9.5pt; min-height: 36px; }
+  .notes-label { font-size: 7.5pt; letter-spacing: 1.3px; text-transform: uppercase; font-weight: 700; opacity: 0.55; margin-bottom: 4px; }
+  .notes-body { font-style: italic; opacity: 0.7; }
+
+  .footer { margin-top: 18px; padding-top: 12px; border-top: 1px solid #0D382030; display: flex; justify-content: space-between; align-items: center; font-size: 8pt; }
+  .footer-left { opacity: 0.75; }
+  .footer-left strong { font-weight: 800; letter-spacing: -0.2px; }
+  .footer-right { opacity: 0.5; font-size: 7.5pt; letter-spacing: 0.3px; }
+
+  .no-data { padding: 40px; text-align: center; color: #0D3820; }
+  .no-data h2 { font-size: 18pt; margin-bottom: 12px; }
+  .no-data code { background: #DFEDE1; padding: 2px 6px; border-radius: 4px; font-size: 10pt; }
+
+  /* Hide browser buttons during print */
+  @media print {
+    .print-toolbar { display: none !important; }
+  }
+  .print-toolbar { position: fixed; top: 16px; right: 16px; z-index: 999; }
+  .print-toolbar button { background: #0D3820; color: #FFFEF4; border: 0; padding: 10px 18px; border-radius: 8px; font-size: 10pt; font-weight: 700; cursor: pointer; box-shadow: 0 2px 8px rgba(13,56,32,0.3); }
+  .print-toolbar button:hover { background: #124a2a; }
+</style>
+</head>
+<body>
+
+<div class="print-toolbar"><button onclick="window.print()">Imprimer en PDF</button></div>
+<div id="root"></div>
+
+<script>
+/* =========================================================================
+   DICTIONNAIRES DE MAPPING
+   ========================================================================= */
+
+const PRODUCT_DICT = {
+  "climax":                { label: "Climax",                compo: "16 acides aminés" },
+  "starter":               { label: "Starter",               compo: "Soufre · Bore · Manganèse · Molybdène · Zinc" },
+  "finisher":              { label: "Finisher",              compo: "Potassium · Bore · Molybdène" },
+  "etincelle":             { label: "Étincelle",             compo: "Phosphore · Potassium · Calcium · Magnésium · Zinc · Manganèse" },
+  "starter_grossissement": { label: "Starter Grossissement", compo: "Phosphore · Cuivre · Manganèse · Zinc" },
+  "fusion":                { label: "Fusion⁺",               compo: "Azote · Manganèse · Cuivre · Zinc" },
+  "solar":                 { label: "Solar",                 compo: "" },
+  "caliban":               { label: "Caliban",               compo: "" },
+  // BIO (compos vides tant que fiches Sandrine/Pierrick non fournies)
+  "starter_cereales_bio":  { label: "Starter Céréales BIO",  compo: "" },
+  "finisher_cereales_bio": { label: "Finisher Céréales BIO", compo: "" },
+  "climax_essentiel_bio":  { label: "Climax Essentiel BIO",  compo: "" },
+  "climax_pdt_bio":        { label: "Climax Pomme de Terre BIO", compo: "" },
+  "vitalis_pdt_bio":       { label: "Vitalis Pomme de Terre BIO", compo: "" },
+  "climax_mais_bio":       { label: "Climax Maïs BIO",       compo: "" },
+  "starter_mais_bio":      { label: "Starter Maïs BIO",      compo: "" },
+};
+
+const CROP_DICT = {
+  "cereales":       "Céréales",
+  "colza":          "Colza",
+  "mais":           "Maïs",
+  "pomme_de_terre": "Pomme de terre",
+  "autre":          null,
+};
+
+const POTATO_TYPE_DICT = {
+  "tuberisation":  "Tubérisation",
+  "grossissement": "Grossissement",
+};
+
+/* =========================================================================
+   PICTOS SVG par stade (détection par mot-clé, fallback générique)
+   ========================================================================= */
+
+const PICTOS = {
+  tallage:            '<svg viewBox="0 0 32 32" fill="none" stroke="#0D3820" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 26 L16 12"/><path d="M16 16 C12 14 10 10 10 6"/><path d="M16 18 C20 16 22 12 22 8"/><path d="M16 22 C13 20 11 17 11 14"/></svg>',
+  montaison:          '<svg viewBox="0 0 32 32" fill="none" stroke="#0D3820" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 28 L16 6"/><ellipse cx="16" cy="9" rx="3" ry="4.5"/><path d="M16 18 C13 16 11 13 11 10"/><path d="M16 20 C19 18 21 15 21 12"/></svg>',
+  epiaison:           '<svg viewBox="0 0 32 32" fill="none" stroke="#0D3820" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 30 L16 6"/><ellipse cx="16" cy="8" rx="3.5" ry="5"/><path d="M12 10 C10 7 10 5 11 3"/><path d="M20 10 C22 7 22 5 21 3"/></svg>',
+  levee:              '<svg viewBox="0 0 32 32" fill="none" stroke="#0D3820" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 28 L16 18"/><path d="M16 22 C13 21 11 18 11 15"/><path d="M16 22 C19 21 21 18 21 15"/></svg>',
+  reprise:            '<svg viewBox="0 0 32 32" fill="none" stroke="#0D3820" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 28 L16 14"/><path d="M16 18 C11 17 7 13 7 7"/><path d="M16 20 C21 19 25 15 25 9"/></svg>',
+  floraison:          '<svg viewBox="0 0 32 32" fill="none" stroke="#0D3820" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="16" cy="10" r="2.5"/><circle cx="11" cy="14" r="1.8"/><circle cx="21" cy="14" r="1.8"/><circle cx="16" cy="18" r="1.8"/><path d="M16 22 L16 28"/></svg>',
+  feuilles:           '<svg viewBox="0 0 32 32" fill="none" stroke="#0D3820" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 28 L16 12"/><path d="M16 18 C12 16 9 12 9 8"/><path d="M16 20 C20 18 23 14 23 10"/></svg>',
+  crochet_noisette:   '<svg viewBox="0 0 32 32" fill="none" stroke="#0D3820" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="16" cy="22" rx="6" ry="5"/><path d="M12 18 C11 14 10 10 12 7"/><path d="M16 17 C16 13 15 9 16 6"/><path d="M20 18 C21 14 22 10 20 7"/></svg>',
+  vegetation:         '<svg viewBox="0 0 32 32" fill="none" stroke="#0D3820" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 28 L16 10"/><path d="M16 18 C12 16 9 12 9 7"/><path d="M16 18 C20 16 23 12 23 7"/><ellipse cx="16" cy="28" rx="7" ry="2"/></svg>',
+  remplissage:        '<svg viewBox="0 0 32 32" fill="none" stroke="#0D3820" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="16" cy="18" rx="4" ry="8"/><path d="M14 10 L14 6"/><path d="M18 10 L18 6"/><path d="M16 10 L16 4"/></svg>',
+  senescence:         '<svg viewBox="0 0 32 32" fill="none" stroke="#0D3820" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 28 L16 14"/><path d="M14 20 C12 18 10 15 11 11"/><path d="M18 20 C20 18 22 15 21 11"/></svg>',
+  siliques:           '<svg viewBox="0 0 32 32" fill="none" stroke="#0D3820" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 10 L14 6"/><path d="M18 10 L18 6"/><ellipse cx="14" cy="18" rx="1.5" ry="6"/><ellipse cx="18" cy="18" rx="1.5" ry="6"/><path d="M16 28 L16 24"/></svg>',
+  elongation:         '<svg viewBox="0 0 32 32" fill="none" stroke="#0D3820" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 28 L16 4"/><path d="M16 14 C12 12 10 8 10 4"/><path d="M16 20 C19 18 21 14 21 10"/></svg>',
+  generic:            '<svg viewBox="0 0 32 32" fill="none" stroke="#0D3820" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="16" cy="16" r="6"/><path d="M16 8 L16 4"/><path d="M16 28 L16 24"/><path d="M8 16 L4 16"/><path d="M28 16 L24 16"/></svg>',
+};
+
+function stadeToPicto(stade) {
+  const s = (stade || '').toLowerCase();
+  if (s.includes('tallage')) return PICTOS.tallage;
+  if (s.includes('montaison') || s.includes('dfe')) return PICTOS.montaison;
+  if (s.includes('épiaison') || s.includes('epiaison')) return PICTOS.epiaison;
+  if (s.includes('levée') || s.includes('levee')) return PICTOS.levee;
+  if (s.includes('reprise')) return PICTOS.reprise;
+  if (s.includes('floraison') || s.includes('fleur')) return PICTOS.floraison;
+  if (s.includes('feuille')) return PICTOS.feuilles;
+  if (s.includes('crochet') || s.includes('noisette') || s.includes('fermeture')) return PICTOS.crochet_noisette;
+  if (s.includes('végétation') || s.includes('vegetation') || s.includes('stabil')) return PICTOS.vegetation;
+  if (s.includes('remplissage') || s.includes('grain')) return PICTOS.remplissage;
+  if (s.includes('sénescence') || s.includes('senescence')) return PICTOS.senescence;
+  if (s.includes('silique')) return PICTOS.siliques;
+  if (s.includes('élongation') || s.includes('elongation')) return PICTOS.elongation;
+  return PICTOS.generic;
+}
+
+/* =========================================================================
+   DÉCODAGE DES PARAMÈTRES URL
+   ========================================================================= */
+
+function getParams() {
+  const p = new URLSearchParams(window.location.search);
+  return {
+    lead_id:    p.get('lead')     || '—',
+    so_id:      p.get('so')       || '—',
+    partner:    p.get('partner')  || '—',
+    surface:    p.get('surface')  || '—',
+    dept:       p.get('dept')     || '—',
+    vendeur:    p.get('vendeur')  || '—',
+    vendeur_tel:p.get('vendeur_tel') || '',
+    comment:    p.get('comment')  || '',
+    preco_b64:  p.get('data')     || '',
+  };
+}
+
+function decodePreco(b64) {
+  if (!b64) return null;
+  try {
+    const json = atob(b64);
+    return JSON.parse(decodeURIComponent(escape(json)));
+  } catch (e) {
+    console.error('Échec décodage préco:', e);
+    return null;
+  }
+}
+
+/* =========================================================================
+   RENDU
+   ========================================================================= */
+
+function esc(s) {
+  if (s == null) return '';
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function renderCultureTitle(crop) {
+  const cropKey = crop.crop;
+  let label = CROP_DICT[cropKey] || crop.crop_label || 'Culture';
+  if (cropKey === 'autre' && crop.crop_label) label = crop.crop_label;
+  if (crop.potato_type) {
+    const pt = POTATO_TYPE_DICT[crop.potato_type] || crop.potato_type;
+    return `${esc(label)} <span style="opacity:0.6">— ${esc(pt)}</span>`;
+  }
+  return esc(label);
+}
+
+function renderCultureEyebrow(crop) {
+  const cropKey = crop.crop;
+  let label = (CROP_DICT[cropKey] || crop.crop_label || '').toUpperCase();
+  const passes = crop.passes || crop.stages.reduce((n, s) => n + (s.repetitions || 1), 0);
+  let subtitle = 'PERSONNALISÉ';
+  if (crop.potato_type) subtitle = (POTATO_TYPE_DICT[crop.potato_type] || crop.potato_type).toUpperCase();
+  return `${esc(label)} · ${passes} PASSAGE${passes > 1 ? 'S' : ''} · ${subtitle}`;
+}
+
+function renderStage(stage) {
+  const rep = stage.repetitions || 1;
+  const pictoSvg = stadeToPicto(stage.stage);
+  const repBadge = rep > 1 ? `<div class="stage-rep-badge">${rep}×</div>` : '';
+  const pills = (stage.lines || []).map(line => {
+    const prod = PRODUCT_DICT[line.product] || { label: line.product, compo: '' };
+    return `<div class="stage-pill">${esc(line.dose)} L/ha ${esc(prod.label)}</div>`;
+  }).join('');
+  const compos = (stage.lines || []).map(line => {
+    const prod = PRODUCT_DICT[line.product] || { label: line.product, compo: '' };
+    if (!prod.compo) return esc(prod.label);
+    return `${esc(prod.label)} — ${esc(prod.compo)}`;
+  }).join('<br>');
+  return `
+    <div class="stage">
+      <div class="stage-picto">${pictoSvg}${repBadge}</div>
+      <div class="stage-name">${esc(stage.stage)}</div>
+      ${pills}
+      <div class="stage-compo">${compos}</div>
+    </div>
+  `;
+}
+
+function renderCulture(crop) {
+  const stages = (crop.stages || []).map(renderStage).join('');
+  return `
+    <div class="culture-section">
+      <div class="culture-eyebrow"><span class="dot"></span>${renderCultureEyebrow(crop)}</div>
+      <div class="culture-title">${renderCultureTitle(crop)}</div>
+      <div class="frise">
+        <div class="frise-eyebrow"><span class="dot"></span>PRÉCONISATION · ÉVOLUTION PAR STADE</div>
+        <div class="timeline">${stages}</div>
+      </div>
+    </div>
+  `;
+}
+
+function renderNoData(params) {
+  return `
+    <div class="page">
+      <div class="no-data">
+        <h2>Aucune préconisation reçue</h2>
+        <p>Cette page attend des paramètres d'URL pour afficher la préconisation d'un lead.</p>
+        <p>Format attendu : <code>?lead=49077&partner=Didier+Sire&surface=67&dept=45&vendeur=Nom&data=&lt;base64&gt;</code></p>
+      </div>
+    </div>
+  `;
+}
+
+function render() {
+  const params = getParams();
+  const preco = decodePreco(params.preco_b64);
+
+  const root = document.getElementById('root');
+
+  if (!preco || !preco.crops || preco.crops.length === 0) {
+    root.innerHTML = renderNoData(params);
+    document.title = 'Préconisation Foliaire — OligoPlus';
+    return;
+  }
+
+  const nbCrops = preco.crops.length;
+  const compactClass = nbCrops >= 2 ? 'compact' : '';
+
+  const cultures = preco.crops.map(renderCulture).join('');
+
+  const today = new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+
+  const html = `
+    <div class="page ${compactClass}">
+      <div class="topbar">
+        <div class="topbar-eyebrow"><strong>RECOMMANDATION</strong> · Nutrition Foliaire · OLIGOPLUS</div>
+        <div class="topbar-ref">${esc(today)}</div>
+      </div>
+
+      <div class="brand-row">
+        <img class="brand-logo-img" src="https://storage.googleapis.com/contenu-oligoplus/logo_oligoplus_white2_2026.png" alt="OligoPlus" />
+      </div>
+
+      <div class="meta-row">
+        <div class="meta-card">
+          <div class="label">Préparé pour</div>
+          <div class="value">${esc(params.partner)}</div>
+          ${params.dept !== '—' || params.surface !== '—' ? `<div style="font-size:9pt;opacity:0.7;margin-top:2px;">${params.dept !== '—' ? 'Dpt ' + esc(params.dept) : ''}${params.dept !== '—' && params.surface !== '—' ? ' · ' : ''}${params.surface !== '—' ? esc(params.surface) + ' ha' : ''}</div>` : ''}
+        </div>
+        <div class="meta-card">
+          <div class="label">Vendeur OligoPlus</div>
+          <div class="value">${esc(params.vendeur)}</div>
+          ${params.vendeur_tel ? `<div style="font-size:9pt;opacity:0.7;margin-top:2px;">${esc(params.vendeur_tel)}</div>` : ''}
+        </div>
+      </div>
+
+      ${cultures}
+
+      <div class="footer">
+        <div class="footer-left"><strong>OligoPlus</strong> · Nutrition foliaire &amp; données agronomiques · contact@oligoplus.com · oligoplus.com</div>
+        <div class="footer-right">Préconisation générée ${esc(today)}</div>
+      </div>
+    </div>
+  `;
+
+  root.innerHTML = html;
+  document.title = `Préconisation Foliaire — ${params.partner}`;
+}
+
+render();
+</script>
+</body>
+</html>
